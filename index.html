@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carforce listings</title>
+  <style>
+    body { font-family: system-ui, sans-serif; line-height: 1.5; max-width: 60rem; margin: 0 auto; padding: 1rem; }
+    form { display: flex; flex-wrap: wrap; gap: 1rem; align-items: end; }
+    form h2 { width: 100%; margin: 0; }
+    label { display: block; font-weight: bold; }
+    select, button { font: inherit; padding: 0.4rem; }
+    .cards { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .card { border: 1px solid #767676; border-radius: 0.5rem; padding: 1rem; }
+    .card h3 { margin-top: 0; }
+
+    /* phone  */
+    @media (max-width:40em) {
+      .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p>Carforce</p>
+  </header>
+
+  <main>
+    <h1>Used cars for sale</h1>
+
+    <form aria-labelledby="filter-heading">
+      <h2 id="filter-heading">Filter cars</h2>
+      <div>
+        <label for="make">Make</label>
+        <select id="make" name="make">
+          <option value="">Any make</option>
+          <option>Honda</option>
+          <option>Suzuki</option>
+          <option>Toyota</option>
+        </select>
+      </div>
+      <div>
+        <label for="price">Maximum price</label>
+        <select id="price" name="price">
+          <option value="">Any price</option>
+          <option value="3000000">Up to PKR 3 million</option>
+          <option value="5000000">Up to PKR 5 million</option>
+          <option value="8000000">Up to PKR 8 million</option>
+        </select>
+      </div>
+      <button type="submit">Filter</button>
+    </form>
+
+    <h2>Results</h2>
+    <p id="count" role="status">6 cars</p>
+    
+    <ul class="cards" role="list">
+      <li class="card" data-make="Toyota" data-price="6350000">
+        <h3>Toyota Corolla Altis</h3>
+        <p>PKR 6,350,000</p>
+        <p>2022, 41,000 km, Lahore</p>
+        <details>
+          <summary>More about the Corolla</summary>
+          <p>One owner, full service history.</p>
+        </details>
+      </li>
+      <li class="card" data-make="Honda" data-price="5100000">
+        <h3>Honda City</h3>
+        <p>PKR 5,100,000</p>
+        <p>2022, 33,000 km, Islamabad</p>
+        <details>
+          <summary>More about the City</summary>
+          <p>Family car, all documents clear.</p>
+        </details>
+      </li>
+      <li class="card" data-make="Suzuki" data-price="2950000">
+        <h3>Suzuki Alto</h3>
+        <p>PKR 2,950,000</p>
+        <p>2023, 18,500 km, Lahore</p>
+        <details>
+          <summary>More about the Alto</summary>
+          <p>City driven, new tyres this year.</p>
+        </details>
+      </li>
+      <li class="card" data-make="Suzuki" data-price="4600000">
+        <h3>Suzuki Swift</h3>
+        <p>PKR 4,600,000</p>
+        <p>2023, 15,000 km, Karachi</p>
+        <details>
+          <summary>More about the Swift</summary>
+          <p>Second owner, spare key included.</p>
+        </details>
+      </li>
+      <li class="card" data-make="Honda" data-price="7900000">
+        <h3>Honda Civic</h3>
+        <p>PKR 7,900,000</p>
+        <p>2021, 52,000 km, Karachi</p>
+        <details>
+          <summary>More about the Civic</summary>
+          <p>Sunroof, full service record.</p>
+        </details>
+      </li>
+      <li class="card" data-make="Toyota" data-price="5300000">
+        <h3>Toyota Yaris</h3>
+        <p>PKR 5,300,000</p>
+        <p>2023, 21,000 km, Islamabad</p>
+        <details>
+          <summary>More about the Yaris</summary>
+          <p>Automatic, original paint.</p>
+        </details>
+      </li>
+    </ul>
+  </main>
+
+  <footer>
+    <p>Footer</p>
+  </footer>
+
+  <script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const make = form.make.value;
+      const maxPrice = Number(form.price.value) || Infinity;
+      let shown = 0;
+      for (const card of document.querySelectorAll('.card')) {
+        const match = (!make || card.dataset.make === make) && Number(card.dataset.price) <= maxPrice;
+        card.hidden = !match;
+        if (match) shown++;
+      }
+      document.getElementById('count').textContent = shown + (shown === 1 ? ' car' : ' cars');
+    });
+  </script>
+</body>
+</html>
