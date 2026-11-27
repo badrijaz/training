@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>freeze test</title>
+</head>
+<body>
+  <main>
+    <h1>Freeze test</h1>
+    <p>start any from the btns below, then keep clicking click me while it runs</p>
+
+    <button id="click-me" type="button">Click me</button>
+    <p id="clicks">0 clicks</p>
+
+    <button id="frozen" type="button">Run frozen 3 second loop</button>
+    <button id="chunked" type="button">Run chunked (same work, small pieces)</button>
+    <p id="status">Idle</p>
+  </main>
+
+  <script>
+    const status = document.getElementById('status');
+    let clicks = 0;
+
+    document.getElementById('click-me').addEventListener('click', () => {
+      clicks++;
+      document.getElementById('clicks').textContent = clicks + ' clicks';
+    });
+
+    // LONG LOOP freezing
+    document.getElementById('frozen').addEventListener('click', () => {
+      status.textContent = 'Working...';
+      const end = Date.now() + 3000;
+      while (Date.now() < end) {
+        // some busy work
+      
+      }
+      status.textContent = 'Done (frozen)';
+    });
+
+    // 3 seconds of work in 50 ms pieces
+    document.getElementById('chunked').addEventListener('click', () => {
+      status.textContent = 'Working...';
+      const end = Date.now() + 3000;
+
+      function doPiece() {
+        const pieceEnd = Date.now() + 50;
+        while (Date.now() < pieceEnd && Date.now() < end) {
+          // busy work
+        }
+        if (Date.now() < end) {
+          setTimeout(doPiece, 0); // let clicks and repaint happen, then carry on
+        } else {
+          status.textContent = 'Done (chunked)';
+        }
+      }
+
+      doPiece();
+    });
+  </script>
+</body>
+</html>
